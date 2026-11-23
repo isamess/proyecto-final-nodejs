@@ -1,32 +1,86 @@
-import fs from 'fs';
-import path from 'path';
-const __dirname = import.meta.dirname;
-// Ruta al archivo JSON que simula la "base de datos"
-const dataPath = path.join(__dirname, '../data/productos.json');
 
 //Los modelos se encargan de interactuar directamente con los datos. En este caso, el modelo Product maneja la lectura y escritura del archivo JSON, simulando el acceso a una base de datos. Su objetivo es abstraer la lógica de acceso a los datos, proporcionando métodos. Los modelos no deben contener lógica de negocio; su función es simplemente gestionar los datos.
 
 
+import { db } from "../data/data.js";
+import{collection, getDocs, doc, getDoc, addDoc, updateDoc, deleteDoc, query, where} from "firebase/firestore";
 
-// Método para buscar un producto por su ID
-export function getProductById(id) {
-const products = this.getAllProducts();
-return products.find(product => product.id === id);
+
+
+export const getAllProducts = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, "products"));
+    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  } catch (error) {
+    console.error(`Error obteniendo colección de productos:`, error);
+    throw error;
+  }
 };
-// Método para obtener todos los productos
-export function getAllProducts() {
-const data = fs.readFileSync(dataPath, 'utf-8');
-return JSON.parse(data);
+
+
+export const getProductById = async(idDocumento) => {
+    try{
+        const docRef = doc(db,  "products", idDocumento);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return { id: docSnap.id, ...docSnap.data() };
+    } else {
+      return null;
+    } 
+
+    } catch(error){
+        console.error(`Error obteniendo el documento con ID ${idDocumento}:`, error);
+    throw error;
+}
 };
-// Método para guardar un producto en el archivo JSON
-export function saveProduct(name, price) {
-const products = this.getAllProducts();
-products.push({ id: products.length, name, price });
-fs.writeFileSync(dataPath, JSON.stringify(products, null, 2));
+
+export const getProductsByCategory = async (valor) => {
+  try {
+    const q = query(collection(db, "products"), where("categoria", "==", valor));
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  } catch (error) {
+    console.error(`Error buscando por categorías:`, error);
+    throw error;
+  }
 };
-// Método para eliminar un producto por su ID
-export function deleteProduct(id) {
-const products = this.getAllProducts();
-products = products.filter(product => product.id !== id);
-fs.writeFileSync(dataPath, JSON.stringify(products, null, 2));
+
+export const createProduct = async (nuevoProducto) => {
+  try {
+    const docRef = await addDoc(collection(db, "products"), nuevoProducto);
+    return { id: docRef.id, ...nuevoProducto };
+  } catch (error) {
+    console.error(`Error creando el producto en products:`, error);
+    throw error;
+  }
+};
+
+export const deleteProduct = async (idDocumento) => {
+  try {
+    const docRef = doc(db, "products", idDocumento);
+    const docSnap = await getDoc(docRef);
+    if (!docSnap.exists()) {
+      return null;
+    }
+    await deleteDoc(docRef);
+    return idDocumento;
+  } catch (error) {
+    console.error(`Error eliminando el documento con ID ${idDocumento}:`, error);
+    throw error;
+  }
+};
+
+export const updateProduct = async (id, updatedData) => {
+  try {
+    const docRef = doc(db, "products", id);
+    const docSnap = await getDoc(docRef);
+    if (!docSnap.exists()) {
+      return null;
+    }
+    await updateDoc(docRef, updatedData);
+    return { id, ...docSnap.data(), ...updatedData };
+  } catch (error) {
+    console.error(`Error actualizando el documento con ID ${id}:`, error);
+    throw error;
+  }
 };

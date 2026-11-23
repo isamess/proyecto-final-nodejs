@@ -1,59 +1,131 @@
-import * as productsService from "../services/product.service.js";
+import { getAllProductsService, getProductServiceById, createProductService, updatedProductService, deleteProductService } from "../services/products.service.js";
 
 
-const products = [
-{
-id: 1,
-name: 'Producto 1',
-price: 1000
-},
-{
-id: 2,
-name: 'Producto 2',
-price: 2000
-}
-]
-export const getAllProducts = (req, res) => {
-    const products = productsService.getAllProducts();
-    res.json(products);
+export const getAllProducts = async (req, res) => {
+    const category = req.query.category;
+    try {
+        const products = await getAllProductsService(category);
+        res.status(200).send({
+            status: 'success',
+            data: products
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            status: 'error',
+            message: 'Error al obtener los productos'
+        });
+    }
 };
 
 export const getProductById = async (req, res) => {
-const id = req.params.id;
-const product = productsService.getProductById(id);
-if (product) {
-res.status(200).json(product);
-} else {
-res.status(404).json({ message: 'Producto no encontrado' });
-}
+    const id = req.params.id;
+    if (id) {
+        try {
+            const product = await getProductServiceById(id);
+            if (product) {
+                res.send({
+                    message: 'Producto encontrado',
+                    data: product
+                });
+            } else {
+                res.status(404).send({
+                    message: 'Producto no encontrado'
+                });
+            }
+        } catch (error) {
+            console.log(error);
+            res.status(500).send({
+                message: 'Error al obtener el producto'
+            });
+        }
+    } else {
+        res.status(400).send({
+            message: 'ID de producto no proporcionado'
+        });
+    }
 };
 
 export const createProduct = async (req, res) => {
-const { name, price } = req.body;
-const newProduct = productsService.createProduct({ name, price });
-res.status(201).json(newProduct);
-}
-
+    const product = req.body;
+    if (!product || Object.keys(product).length === 0) {
+        return res.status(400).send({
+            message: 'Datos del producto no proporcionados'
+        });
+    }
+    try {
+        const newProduct = await createProductService(product);
+        res.status(201).send({
+            message: 'Producto creado exitosamente',
+            data: newProduct
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            message: 'Error interno al crear el producto'
+        });
+    }
+};
 
 export const updateProduct = async (req, res) => {
-const id = req.params.id;
-const { name, price } = req.body;
-const productIndex = productsService.updateProduct(id, { name, price });
-if (productIndex !== -1) {
-products[productIndex].name = name ?? products[productIndex].name;
-products[productIndex].price = price ?? products[productIndex].price;
-res.status(200).json(products[productIndex]);
-} else {
-res.status(404).json({ message: 'Producto no encontrado' });
-}
+    const id = req.params.id;
+    if (!id) {
+        return res.status(400).send({
+            message: 'ID de producto no proporcionado'
+        });
+    }
+
+    const productData = req.body;
+    if (!productData || Object.keys(productData).length === 0) {
+        return res.status(400).send({
+            message: 'Datos del producto no proporcionados'
+        });
+    }
+
+    try {
+        const updatedProduct = await updatedProductService(id, productData);
+        if (updatedProduct) {
+            res.send({
+                message: 'Producto actualizado exitosamente',
+                data: updatedProduct
+            });
+        } else {
+            res.status(404).send({
+                message: 'Producto no encontrado'
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({
+            message: 'Error interno al actualizar el producto'
+        });
+    }
 };
 
 export const deleteProduct = async (req, res) => {
-const id = req.params.id;
-const productIndex = productsService.deleteProduct(id);
-if (productIndex !== -1) {
-res.status(200).json({ message: 'Producto eliminado' });
-} else {
-res.status(404).json({ message: 'Producto no encontrado' });
-}
+    const id = req.params.id;
+    if (id) {
+        try {
+            const deletedProduct = await deleteProductService(id);
+            if (deletedProduct) {
+                res.send({
+                    message: 'Producto eliminado exitosamente',
+                    data: id
+                });
+            } else {
+                res.status(404).send({
+                    message: 'Producto no encontrado'
+                });
+            }
+        } catch (error) {
+            console.log(error);
+            res.status(500).send({
+                message: 'Error interno al eliminar el producto'
+            });
+        }
+    } else {
+        res.status(400).send({
+            message: 'ID de producto no proporcionado'
+        });
+    }
 };
