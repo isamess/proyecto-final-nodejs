@@ -1,0 +1,146 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1000" viewBox="0 0 1500 1000" role="img" aria-labelledby="archTitle archDesc">
+  <title id="archTitle">Arquitectura de la API de Productos</title>
+  <desc id="archDesc">Diagrama de capas del backend: cliente, Vercel, Express, rutas, middleware JWT, controladores, servicios, modelos, utilidades y Firebase Firestore.</desc>
+
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.10"/>
+    </filter>
+
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+
+    <marker id="arrow-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#0d9488"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1500" height="1000" fill="#f8fafc"/>
+
+  <g font-family="Segoe UI, Arial, sans-serif">
+    <text x="50" y="52" font-size="28" font-weight="700" fill="#0f172a">Arquitectura de la API de Productos</text>
+    <text x="50" y="82" font-size="15" fill="#475569">Node.js · Express 5 · Firebase Firestore · JWT · despliegue en Vercel</text>
+
+    <!-- Contenedor Vercel -->
+    <rect x="270" y="120" width="760" height="760" rx="18" fill="#ffffff" fill-opacity="0.55" stroke="#94a3b8" stroke-width="2" stroke-dasharray="8 6"/>
+    <text x="292" y="152" font-size="17" font-weight="700" fill="#334155">Vercel · Serverless (HTTPS)</text>
+    <text x="292" y="172" font-size="12" fill="#64748b">Aplicación Express</text>
+
+    <!-- Cliente -->
+    <rect x="40" y="220" width="190" height="150" rx="14" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" filter="url(#shadow)"/>
+    <text x="60" y="252" font-size="17" font-weight="700" fill="#0c4a6e">Cliente</text>
+    <text x="60" y="282" font-size="13" fill="#0c4a6e">Postman</text>
+    <text x="60" y="304" font-size="13" fill="#0c4a6e">Frontend</text>
+    <text x="60" y="334" font-size="12" fill="#0369a1">HTTPS / JSON</text>
+
+    <!-- index.js -->
+    <rect x="300" y="200" width="700" height="100" rx="12" fill="#dcfce7" stroke="#16a34a" stroke-width="2" filter="url(#shadow)"/>
+    <text x="320" y="232" font-size="16" font-weight="700" fill="#14532d">index.js — Punto de entrada</text>
+    <text x="320" y="258" font-size="12.5" fill="#166534">CORS · body-parser (JSON) · logger · middleware 404 · handler 500</text>
+    <text x="320" y="282" font-size="12" fill="#166534">app.use('/api', productsRoutes) · app.use('/auth', authRouter)</text>
+
+    <!-- Rutas -->
+    <rect x="300" y="330" width="330" height="90" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2" filter="url(#shadow)"/>
+    <text x="320" y="360" font-size="16" font-weight="700" fill="#1e3a8a">Rutas</text>
+    <text x="320" y="383" font-size="12.5" fill="#1d4ed8">products.routes.js</text>
+    <text x="320" y="403" font-size="12.5" fill="#1d4ed8">auth.routes.js</text>
+
+    <!-- Middleware JWT -->
+    <rect x="670" y="330" width="330" height="90" rx="12" fill="#ccfbf1" stroke="#0d9488" stroke-width="2" filter="url(#shadow)"/>
+    <text x="690" y="357" font-size="15" font-weight="700" fill="#134e4a">Middleware de autenticación</text>
+    <text x="690" y="381" font-size="12.5" fill="#0f766e">authentication.js</text>
+    <text x="690" y="403" font-size="12" fill="#0f766e">JWT inválido → 401 / 403</text>
+
+    <!-- Controladores -->
+    <rect x="300" y="460" width="330" height="90" rx="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="2" filter="url(#shadow)"/>
+    <text x="320" y="490" font-size="16" font-weight="700" fill="#4c1d95">Controladores</text>
+    <text x="320" y="514" font-size="12.5" fill="#6d28d9">products.controller.js</text>
+    <text x="320" y="534" font-size="12.5" fill="#6d28d9">auth.controller.js</text>
+
+    <!-- Utilidades JWT -->
+    <rect x="670" y="460" width="330" height="90" rx="12" fill="#fef9c3" stroke="#ca8a04" stroke-width="2" filter="url(#shadow)"/>
+    <text x="690" y="490" font-size="16" font-weight="700" fill="#713f12">Utilidades JWT</text>
+    <text x="690" y="514" font-size="12.5" fill="#854d0e">utils/token-generator.js</text>
+    <text x="690" y="534" font-size="12" fill="#854d0e">Firma y expiración (1 h)</text>
+
+    <!-- Servicios -->
+    <rect x="300" y="590" width="330" height="90" rx="12" fill="#ffedd5" stroke="#ea580c" stroke-width="2" filter="url(#shadow)"/>
+    <text x="320" y="620" font-size="16" font-weight="700" fill="#7c2d12">Servicios</text>
+    <text x="320" y="644" font-size="12.5" fill="#9a3412">products.service.js</text>
+    <text x="320" y="664" font-size="12.5" fill="#9a3412">auth.service.js</text>
+
+    <!-- Modelos -->
+    <rect x="670" y="590" width="330" height="90" rx="12" fill="#fee2e2" stroke="#dc2626" stroke-width="2" filter="url(#shadow)"/>
+    <text x="690" y="620" font-size="16" font-weight="700" fill="#7f1d1d">Modelos</text>
+    <text x="690" y="644" font-size="12.5" fill="#b91c1c">products.model.js</text>
+    <text x="690" y="664" font-size="11.5" fill="#b91c1c">getDocs · addDoc · updateDoc · deleteDoc</text>
+
+    <!-- Configuración -->
+    <rect x="300" y="740" width="700" height="90" rx="12" fill="#e2e8f0" stroke="#475569" stroke-width="2" filter="url(#shadow)"/>
+    <text x="320" y="770" font-size="16" font-weight="700" fill="#1e293b">Configuración</text>
+    <text x="320" y="794" font-size="12.5" fill="#334155">src/data/data.js · Firebase SDK (initializeApp / getFirestore)</text>
+    <text x="320" y="814" font-size="12" fill="#334155">.env / Environment Variables de Vercel</text>
+
+    <!-- Firestore -->
+    <rect x="1120" y="560" width="270" height="200" rx="14" fill="#fef3c7" stroke="#d97706" stroke-width="2" filter="url(#shadow)"/>
+    <text x="1140" y="594" font-size="17" font-weight="700" fill="#78350f">Firebase Firestore</text>
+    <text x="1140" y="620" font-size="13" fill="#92400e">Colección: products</text>
+    <line x1="1140" y1="632" x2="1370" y2="632" stroke="#f59e0b" stroke-width="1"/>
+    <text x="1140" y="656" font-size="12.5" fill="#78350f">• nombre</text>
+    <text x="1140" y="678" font-size="12.5" fill="#78350f">• descripcion</text>
+    <text x="1140" y="700" font-size="12.5" fill="#78350f">• categoria</text>
+    <text x="1140" y="722" font-size="12.5" fill="#78350f">• precio</text>
+
+    <!-- Flechas -->
+    <path d="M230 295 C255 295 275 248 298 245" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+    <path d="M465 300 L465 328" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+    <path d="M630 375 L668 375" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+    <path d="M465 420 L465 458" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+    <path d="M835 420 C835 442 700 452 602 460" fill="none" stroke="#0d9488" stroke-width="2" marker-end="url(#arrow-teal)"/>
+    <path d="M630 505 L668 505" fill="none" stroke="#0d9488" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrow-teal)"/>
+    <path d="M465 550 L465 588" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+    <path d="M630 635 L668 635" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+    <path d="M1000 635 L1118 635" fill="none" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+    <path d="M1000 785 C1050 785 1085 760 1118 742" fill="none" stroke="#0d9488" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrow-teal)"/>
+
+    <!-- Etiquetas de flechas -->
+    <text x="232" y="272" font-size="10.5" fill="#475569">petición HTTP</text>
+    <text x="500" y="318" font-size="10.5" fill="#475569">router</text>
+    <text x="628" y="320" font-size="10" fill="#475569">protegidas</text>
+    <text x="500" y="443" font-size="10.5" fill="#475569">handler</text>
+    <text x="715" y="428" font-size="10" fill="#0d9488">next()</text>
+    <text x="632" y="495" font-size="10" fill="#0d9488">token</text>
+    <text x="500" y="573" font-size="10.5" fill="#475569">lógica</text>
+    <text x="635" y="622" font-size="10.5" fill="#475569">datos</text>
+    <text x="1025" y="620" font-size="10.5" fill="#475569">CRUD</text>
+    <text x="1025" y="800" font-size="10" fill="#0d9488">conexión</text>
+
+    <!-- Números de flujo -->
+    <g font-size="11" font-weight="700" text-anchor="middle">
+      <circle cx="250" cy="250" r="10" fill="#0f172a"/><text x="250" y="254" fill="#ffffff">1</text>
+      <circle cx="485" cy="315" r="10" fill="#0f172a"/><text x="485" y="319" fill="#ffffff">2</text>
+      <circle cx="650" cy="352" r="10" fill="#0f172a"/><text x="650" y="356" fill="#ffffff">3</text>
+      <circle cx="700" cy="436" r="10" fill="#0f172a"/><text x="700" y="440" fill="#ffffff">4</text>
+      <circle cx="485" cy="440" r="10" fill="#0f172a"/><text x="485" y="444" fill="#ffffff">5</text>
+      <circle cx="485" cy="570" r="10" fill="#0f172a"/><text x="485" y="574" fill="#ffffff">6</text>
+      <circle cx="650" cy="655" r="10" fill="#0f172a"/><text x="650" y="659" fill="#ffffff">7</text>
+      <circle cx="1040" cy="655" r="10" fill="#0f172a"/><text x="1040" y="659" fill="#ffffff">8</text>
+    </g>
+
+    <!-- Nota serverless -->
+    <text x="320" y="858" font-size="11" fill="#64748b">Cada petición se ejecuta como una función serverless en Vercel.</text>
+
+    <!-- Leyenda -->
+    <rect x="40" y="900" width="520" height="70" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+    <text x="60" y="926" font-size="13" font-weight="700" fill="#334155">Referencias</text>
+    <line x1="60" y1="946" x2="100" y2="946" stroke="#475569" stroke-width="2" marker-end="url(#arrow)"/>
+    <text x="110" y="950" font-size="12" fill="#475569">Flujo de la petición</text>
+    <line x1="270" y1="946" x2="310" y2="946" stroke="#0d9488" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrow-teal)"/>
+    <text x="320" y="950" font-size="12" fill="#475569">Autenticación / configuración</text>
+
+    <!-- Nota de auth -->
+    <text x="600" y="930" font-size="12.5" fill="#334155">Autenticación: POST /auth/login → auth.controller → auth.service → token-generator → JWT (1 h).</text>
+    <text x="600" y="952" font-size="12.5" fill="#334155">Rutas protegidas: POST / PUT / DELETE de productos → authentication.js (Bearer token).</text>
+  </g>
+</svg>

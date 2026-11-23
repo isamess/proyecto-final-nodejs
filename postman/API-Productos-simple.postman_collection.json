@@ -1,0 +1,167 @@
+{
+  "info": {
+    "_postman_id": "22222222-3333-4444-8555-666666666666",
+    "name": "API Productos Simple",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"user@email.com\",\n  \"password\": \"strongPass123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://proyecto-final-nodejs-mu.vercel.app/auth/login",
+          "protocol": "https",
+          "host": [
+            "proyecto-final-nodejs-mu",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      }
+    },
+    {
+      "name": "2. Listar productos",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://proyecto-final-nodejs-mu.vercel.app/api/products",
+          "protocol": "https",
+          "host": [
+            "proyecto-final-nodejs-mu",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "api",
+            "products"
+          ]
+        }
+      }
+    },
+    {
+      "name": "3. Crear producto",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer PEGAR_TOKEN_AQUI"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Producto de prueba\",\n  \"descripcion\": \"Creado desde Postman\",\n  \"categoria\": \"test\",\n  \"precio\": 100\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://proyecto-final-nodejs-mu.vercel.app/api/products/create",
+          "protocol": "https",
+          "host": [
+            "proyecto-final-nodejs-mu",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "api",
+            "products",
+            "create"
+          ]
+        }
+      }
+    },
+    {
+      "name": "4. Actualizar producto",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer PEGAR_TOKEN_AQUI"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"precio\": 150\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://proyecto-final-nodejs-mu.vercel.app/api/products/PEGAR_ID",
+          "protocol": "https",
+          "host": [
+            "proyecto-final-nodejs-mu",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "api",
+            "products",
+            "PEGAR_ID"
+          ]
+        }
+      }
+    },
+    {
+      "name": "5. Eliminar producto",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer PEGAR_TOKEN_AQUI"
+          }
+        ],
+        "url": {
+          "raw": "https://proyecto-final-nodejs-mu.vercel.app/api/products/PEGAR_ID",
+          "protocol": "https",
+          "host": [
+            "proyecto-final-nodejs-mu",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "api",
+            "products",
+            "PEGAR_ID"
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "info": {
+    "_postman_id": "11111111-2222-4333-8444-555555555555",
+    "name": "Prueba Import Minimal",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET productos",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://proyecto-final-nodejs-mu.vercel.app/api/products",
+          "protocol": "https",
+          "host": [
+            "proyecto-final-nodejs-mu",
+            "vercel",
+            "app"
+          ],
+          "path": [
+            "api",
+            "products"
+          ]
+        }
+      }
+    }
+  ]
+}

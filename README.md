@@ -1,5 +1,11 @@
 # API de Productos — Proyecto Final Node.js
 
+## Bienvenido a mi API de productos
+
+![Portada: diagrama de arquitectura del proyecto](docs/arquitectura.png)
+
+> Diagrama editable: [`docs/arquitectura.svg`](docs/arquitectura.svg). Vista previa de la portada: [`docs/portada.html`](docs/portada.html). También se muestra en la página desplegada: [proyecto-final-nodejs-mu.vercel.app](https://proyecto-final-nodejs-mu.vercel.app).
+
 API REST para administrar el catálogo de productos de una tienda, construida con **Node.js + Express 5**, **Firebase Firestore** como base de datos en la nube y **JWT** para autenticación.
 
 El proyecto sigue una arquitectura por capas (rutas → controladores → servicios → modelos), con middlewares para autenticación y manejo de errores, y configuración centralizada de servicios externos.
@@ -10,6 +16,7 @@ El proyecto sigue una arquitectura por capas (rutas → controladores → servic
 
 - [Características](#características)
 - [Tecnologías](#tecnologías)
+- [Arquitectura](#arquitectura)
 - [Estructura del proyecto](#estructura-del-proyecto)
 - [Instalación](#instalación)
 - [Variables de entorno](#variables-de-entorno)
@@ -62,6 +69,29 @@ El proyecto sigue una arquitectura por capas (rutas → controladores → servic
 
 ---
 
+## Arquitectura
+
+El diagrama completo está en la [portada de este README](#bienvenido-a-mi-api-de-productos) y en [`docs/arquitectura.svg`](docs/arquitectura.svg).
+
+Una petición recorre este camino:
+
+```
+Cliente → Vercel/Express → Rutas → (Middleware JWT) → Controlador → Servicio → Modelo → Firestore
+```
+
+- **index.js**: configuración de Express, CORS, body-parser, logger, routers, 404 y errores.
+- **Rutas**: definen los endpoints de productos y de login.
+- **Middleware JWT**: protege POST, PUT y DELETE de productos.
+- **Controladores**: validan la request y arman la respuesta.
+- **Servicios**: concentran la lógica de negocio.
+- **Modelos**: acceden a Firestore.
+- **Utilidades**: generan y firman los tokens JWT.
+- **Configuración**: inicializa Firebase y lee las variables de entorno.
+
+> El diagrama está en `docs/arquitectura.svg` y se puede abrir en el navegador o editar como texto. La página `GET /` lo muestra incrustado en HTML; si modificás el SVG, regenerá la portada con `npm run portada`.
+
+---
+
 ## Estructura del proyecto
 
 ```
@@ -85,11 +115,20 @@ ProyectoFinalNodeJS/
 │   ├── routes/
 │   │   ├── auth.routes.js          # POST /auth/login
 │   │   └── products.routes.js      # Rutas de productos
-│   └── services/
-│       ├── auth.service.js         # Lógica de validación del login
-│       └── products.service.js     # Lógica de negocio de productos
-└── utils/
-    └── token-generator.js          # Firma del token JWT
+│   ├── services/
+│   │   ├── auth.service.js         # Lógica de validación del login
+│   │   └── products.service.js     # Lógica de negocio de productos
+│   └── views/
+│       └── portada.js              # HTML de la portada (generado, no editar)
+├── utils/
+│   └── token-generator.js          # Firma del token JWT
+├── scripts/
+│   └── generar-portada.js          # Regenera src/views/portada.js desde el SVG
+├── docs/
+│   ├── arquitectura.svg            # Diagrama editable (fuente)
+│   ├── arquitectura.png            # Imagen para README y visualización rápida
+│   └── portada.html                # Vista previa de la portada (abrir en navegador)
+└── postman/                         # Colecciones y entornos para probar la API
 ```
 
 ### Flujo de una petición
@@ -265,7 +304,7 @@ Respuestas del middleware:
 
 | Método | Ruta | Descripción | Auth |
 |---|---|---|---|
-| `GET` | `/` | Mensaje de bienvenida | No |
+| `GET` | `/` | Portada web (bienvenida + diagrama de arquitectura) | No |
 | `POST` | `/auth/login` | Inicia sesión y devuelve el token | No |
 | `GET` | `/api/products` | Lista todos los productos (filtro opcional por categoría) | No |
 | `GET` | `/api/products/:id` | Obtiene un producto por ID | No |
@@ -460,11 +499,9 @@ Elimina un producto. **Requiere token.**
 
 ### `GET /`
 
-**Respuesta `200` (texto plano):**
+Devuelve la **portada web del proyecto** con `Content-Type: text/html; charset=utf-8`: el mensaje «Bienvenido a mi API de productos», el diagrama de arquitectura incrustado y accesos rápidos a la API y al repositorio.
 
-```
-Bienvenido a mi API de productos
-```
+> El mensaje de bienvenida se mantiene dentro del HTML, por lo que la verificación del requisito sigue cumpliéndose. El HTML se genera desde `docs/arquitectura.svg` con `npm run portada`.
 
 ---
 
@@ -578,6 +615,17 @@ pm.collectionVariables.set("token", data.token);
 
 > El token vence a la hora; si recibís `403 Token inválido`, volvé a ejecutar el login.
 
+### Entornos (opcional)
+
+La colección ya trae sus propias variables, así que **no es obligatorio crear un Environment**. Si preferís usar entornos, hay dos listos para importar:
+
+- `postman/Vercel.postman_environment.json` → `baseUrl = https://proyecto-final-nodejs-mu.vercel.app`
+- `postman/Local.postman_environment.json` → `baseUrl = http://localhost:3000`
+
+Se importan igual que la colección (**Import → File**) y después se selecciona el entorno activo en el selector de entornos de Postman.
+
+> Los entornos solo definen `baseUrl`. No agregues `token` ni `productId` en el entorno: si los definís vacíos, pueden sobrescribir las variables de colección que completan los scripts y las rutas protegidas fallarían con `401`.
+
 ---
 
 ## Modelo de datos
@@ -654,6 +702,7 @@ Los errores no controlados pasan por el middleware global de `index.js`, que res
 |---|---|---|
 | `start` | `npm start` | Inicia el servidor con Node.js |
 | `dev` | `npm run dev` | Inicia el servidor con nodemon (recarga automática) |
+| `portada` | `npm run portada` | Regenera la portada HTML (`src/views/portada.js`) desde `docs/arquitectura.svg` |
 | `test` | `npm test` | Placeholder (aún no hay tests automatizados) |
 
 ---

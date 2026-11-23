@@ -4,6 +4,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import productsRoutes from './src/routes/products.routes.js';
 import authRouter from './src/routes/auth.routes.js';
+import { renderPortada } from './src/views/portada.js';
 
 const app = express();
 
@@ -25,9 +26,9 @@ app.use((req, res, next) => {
 app.use('/api', productsRoutes);
 app.use('/auth', authRouter);
 
-// Ruta principal
+// Ruta principal: portada del proyecto (HTML con el diagrama de arquitectura)
 app.get('/', (req, res) => {
-    res.send('Bienvenido a mi API de productos');
+    res.type('html').send(renderPortada());
 });
 
 // Middleware para manejar rutas no encontradas (404)
