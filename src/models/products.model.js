@@ -1,5 +1,5 @@
 
-//Los modelos se encargan de interactuar directamente con los datos. En este caso, el modelo Product maneja la lectura y escritura del archivo JSON, simulando el acceso a una base de datos. Su objetivo es abstraer la lógica de acceso a los datos, proporcionando métodos. Los modelos no deben contener lógica de negocio; su función es simplemente gestionar los datos.
+//Los modelos se encargan de interactuar directamente con los datos. Su objetivo es abstraer la lógica de acceso a los datos, proporcionando métodos. Los modelos no deben contener lógica de negocio; su función es simplemente gestionar los datos.
 
 
 import { db } from "../data/data.js";

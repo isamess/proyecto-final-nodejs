@@ -1,5 +1,39 @@
 import { getAllProductsService, getProductServiceById, createProductService, updatedProductService, deleteProductService } from "../services/products.service.js";
 
+const CAMPOS_PRODUCTO = ["nombre", "descripcion", "categoria", "precio"];
+
+// Devuelve un mensaje de error o null cuando el producto es válido.
+// Con parcial = true se permite actualizar solo algunos campos (por ejemplo, precio).
+const validarProducto = (producto, parcial = false) => {
+    if (!producto || typeof producto !== "object" || Array.isArray(producto)) {
+        return "Datos del producto no proporcionados";
+    }
+
+    const presentes = CAMPOS_PRODUCTO.filter((campo) =>
+        Object.prototype.hasOwnProperty.call(producto, campo)
+    );
+
+    if (presentes.length === 0) {
+        return "Datos del producto no proporcionados";
+    }
+
+    if (!parcial && (!producto.nombre || producto.precio === undefined)) {
+        return "nombre y precio son obligatorios";
+    }
+
+    for (const campo of presentes) {
+        const valor = producto[campo];
+        if (campo === "precio") {
+            if (typeof valor !== "number" || !Number.isFinite(valor) || valor < 0) {
+                return "precio debe ser un número mayor o igual a 0";
+            }
+        } else if (typeof valor !== "string" || valor.trim() === "") {
+            return `${campo} debe ser un texto no vacío`;
+        }
+    }
+
+    return null;
+};
 
 export const getAllProducts = async (req, res) => {
     const category = req.query.category;
@@ -48,10 +82,9 @@ export const getProductById = async (req, res) => {
 
 export const createProduct = async (req, res) => {
     const product = req.body;
-    if (!product || Object.keys(product).length === 0) {
-        return res.status(400).send({
-            message: 'Datos del producto no proporcionados'
-        });
+    const error = validarProducto(product);
+    if (error) {
+        return res.status(400).send({ message: error });
     }
     try {
         const newProduct = await createProductService(product);
@@ -76,10 +109,9 @@ export const updateProduct = async (req, res) => {
     }
 
     const productData = req.body;
-    if (!productData || Object.keys(productData).length === 0) {
-        return res.status(400).send({
-            message: 'Datos del producto no proporcionados'
-        });
+    const error = validarProducto(productData, true);
+    if (error) {
+        return res.status(400).send({ message: error });
     }
 
     try {

@@ -634,10 +634,12 @@ Colección de Firestore: **`products`**
 
 | Campo | Tipo | Descripción |
 |---|---|---|
-| `nombre` | `string` | Nombre del producto |
-| `descripcion` | `string` | Descripción del producto |
-| `categoria` | `string` | Categoría (ej. `alfajores`, `cookies`, `brownies`) |
-| `precio` | `number` | Precio del producto |
+| `nombre` | `string` | Nombre del producto (obligatorio al crear) |
+| `descripcion` | `string` | Descripción del producto (opcional) |
+| `categoria` | `string` | Categoría (ej. `alfajores`, `cookies`, `brownies`; opcional) |
+| `precio` | `number` | Precio del producto (obligatorio al crear, ≥ 0) |
+
+> Validación: `nombre` y `precio` son obligatorios en `POST /api/products/create`; en `PUT /api/products/:id` se puede enviar solo el campo a modificar. Los campos de texto no pueden estar vacíos y `precio` debe ser un número mayor o igual a 0.
 
 > El `id` no se guarda como campo: Firestore genera el ID del documento y la API lo agrega a la respuesta como `id`.
 
@@ -712,7 +714,7 @@ Los errores no controlados pasan por el middleware global de `index.js`, que res
 - **#1 Configuración inicial:** `index.js`, `package.json` con `"type": "module"` y script `start`.
 - **#2 Dependencias:** `express`, `cors`, `body-parser`, `dotenv`, `firebase`, `jsonwebtoken`.
 - **#3 Configuración del servidor:** Express, CORS global, `body-parser` JSON, middleware 404 y archivo `.env`.
-- **#4 Rutas:** productos (`GET`, `GET /:id`, `POST /create`, `DELETE /:id`) y `POST /auth/login`.
+- **#4 Rutas:** productos (`GET`, `GET /:id`, `POST /create`, `PUT /:id`, `DELETE /:id`) y `POST /auth/login`.
 - **#5 Controladores y servicios:** una capa de controladores y una de servicios para cada ruta.
 - **#6 Acceso a los datos:** modelos conectados a Firestore.
 - **#7 Rutas protegidas:** JWT, middleware de autenticación, login con validación y Bearer token.
